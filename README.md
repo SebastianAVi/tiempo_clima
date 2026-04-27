@@ -43,7 +43,7 @@ hora_consulta	Hora exacta de la consulta
 ---
 Estructura del proyecto
 ```
-datamarket/
+tiempo_clima/
 ├── ingesta.py          <- script principal (Etapa 1)
 ├── README.md           <- este archivo
 ├── .gitignore          <- excluye logs y datos generados
