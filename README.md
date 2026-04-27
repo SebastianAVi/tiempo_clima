@@ -1,8 +1,4 @@
-DataMarket - Pipeline de Datos
-Etapa 1: Ingesta de Datos Climaticos Automatizada
----
-Contexto
-DataMarket monitorea el clima de sus 10 sucursales en Chile para correlacionar
+tiempo_clima monitorea el clima de sus 10 sucursales en Chile para correlacionar
 las condiciones climaticas con el comportamiento de ventas diarias.
 Este script automatiza la captura de esos datos desde una API publica en tiempo real.
 ---
