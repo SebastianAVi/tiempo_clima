@@ -1,96 +1,88 @@
-# DataMarket – Pipeline de Datos
-## Etapa 1: Ingesta de Datos Automatizada
+# ⛅ tiempo_clima
+
+**Proyecto de práctica** para la asignatura **Gestión de Datos para la IA**.
+
+Este script automatiza la **ingesta de datos climáticos en tiempo real** de 10 sucursales en Chile. El objetivo es recopilar información meteorológica para posteriormente **correlacionar las condiciones climáticas con el comportamiento de ventas diarias**.
 
 ---
 
-## ¿Qué hace este script?
+## ✨ Características
 
-`ingesta.py` es la primera etapa del pipeline de datos de DataMarket.  
-Su función es obtener registros de clientes desde una fuente externa (API HTTP) y almacenarlos como CSV crudo en `data/raw/`, listos para la siguiente etapa de limpieza.
-
-El script implementa un patrón de **fallback**: si la API productiva no está disponible (entorno de desarrollo, red caída, etc.), utiliza automáticamente un dataset de respaldo con los mismos errores intencionales del caso DataMarket, garantizando que el pipeline pueda ejecutarse siempre.
-
----
-
-## Fuente de datos
-
-| Parámetro | Valor |
-|---|---|
-| URL productiva | `https://api.datamarket.cl/v1/clientes/export` |
-| Método | `GET` |
-| Respuesta esperada | JSON con clave `"clientes"` → lista de objetos |
-| Fallback | `FALLBACK_DATA` (20 registros sintéticos en el propio script) |
-
-Los datos de respaldo simulan los errores reales descritos en el caso:
-- Correo sin `@`
-- Ciudad en MAYÚSCULAS
-- Fecha con formato `DD/MM/YYYY`
-- Nombre vacío (valor nulo)
-- Registros duplicados exactos
+- Consulta automática a la API pública **Open-Meteo** (gratuita y sin clave API).
+- Monitoreo de 10 ciudades/sucursales clave de Chile.
+- Generación de archivo CSV con datos crudos.
+- Sistema de logging detallado con timestamp único.
+- Sin dependencias externas (solo Python estándar).
 
 ---
 
-## Cómo ejecutarlo
+## 🛠️ Tecnologías
+
+- **Python 3.10+**
+- **Open-Meteo API** (`https://api.open-meteo.com/v1/forecast`)
+- Datos: temperatura, humedad, velocidad del viento, descripción (escala Beaufort), coordenadas y timestamp.
+
+---
+
+## 🚀 Cómo ejecutar
 
 ```bash
-# Desde la raíz del proyecto
+# Clonar el repositorio
+git clone https://github.com/SebastianAVi/tiempo_clima.git
+cd tiempo_clima
+
+# Ejecutar el script de ingesta
 python ingesta.py
-```
+Requisitos:
 
-No requiere librerías externas. Usa solo la biblioteca estándar de Python (`csv`, `json`, `logging`, `urllib`).
+Conexión a internet
+Python 3.10 o superior (no requiere instalación de paquetes)
 
----
 
-## Archivos generados
-
-```
-data/
-└── raw/
-    └── clientes.csv          ← dataset crudo (20 registros)
-logs/
-└── ingesta_YYYYMMDD_HHMMSS.log  ← log de la ejecución
-```
-
----
-
-## Estructura del proyecto
-
-```
-datamarket/
-├── ingesta.py          ← script principal (Etapa 1)
-├── README.md           ← este archivo
+📁 Estructura del proyecto
+Bashtiempo_clima/
+├── ingesta.py                  # Script principal (Etapa 1)
+├── limpieza.py                 # (Próxima etapa)
+├── README.md
+├── .gitignore
 ├── data/
-│   ├── raw/            ← datos crudos ingresados
-│   └── processed/      ← datos limpios (Etapa 2)
-└── logs/               ← registros de ejecución
-```
+│   ├── raw/                    # Datos crudos de la API
+│   └── processed/              # Datos limpios y transformados (Etapa 2)
+└── logs/
+    └── ingesta_YYYYMMDD_HHMMSS.log   # Registro de cada ejecución
 
----
+📊 Archivos generados
 
-## Trazabilidad
+data/raw/clima_sucursales.csv → Datos crudos en tiempo real
+logs/ingesta_YYYYMMDD_HHMMSS.log → Log detallado de la ejecución
 
-Cada ejecución genera un log con timestamp único que registra:
-- Inicio y fin del proceso
-- URL de la API consultada
-- Si se usó fallback y por qué
-- Cantidad de registros almacenados
-- Ruta del archivo destino
+Columnas del CSV
 
----
 
-## Columnas del CSV de salida
+🌆 Sucursales monitoreadas
 
-| Columna | Descripción |
-|---|---|
-| `nombre` | Nombre del cliente |
-| `apellido` | Apellido del cliente |
-| `rut` | RUT en formato `XX.XXX.XXX-X` (puede venir sucio) |
-| `correo` | Email (puede venir sin `@`) |
-| `fecha_registro` | Fecha en formato `YYYY-MM-DD` (puede venir en otros formatos) |
-| `ciudad` | Ciudad de la sucursal (puede venir en mayúsculas) |
+Santiago
+Valparaíso
+Concepción
+Antofagasta
+La Serena
+Temuco
+Iquique
+Puerto Montt
+Arica
+Rancagua
 
----
 
-## Próxima etapa
+📋 Próximas etapas
 
-**Etapa 2 – `limpieza.py`**: leerá `data/raw/clientes.csv`, corregirá los errores detectados y generará `data/processed/clientes_limpios.csv`.
+Etapa 2: limpieza.py → Lectura, limpieza, normalización y guardado en data/processed/clima_limpio.csv
+Etapa 3: Análisis exploratorio y correlación con datos de ventas (pendiente)
+
+
+📌 Trazabilidad
+Cada ejecución genera un log que registra:
+
+Inicio y fin del proceso
+Ciudades consultadas
+Cantidad de consultas exitosas/fallidas
+Ruta del archivo CSV generado
