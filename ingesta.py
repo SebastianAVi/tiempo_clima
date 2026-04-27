@@ -70,7 +70,7 @@ def obtener_clima_ciudad(sucursal: dict):
     try:
         req = urllib.request.Request(
             url,
-            headers={"User-Agent": "DataMarket-Pipeline/1.0"}
+            headers={"User-Agent": "tiempo_clima-Pipeline/1.0"}
         )
         with urllib.request.urlopen(req, timeout=10) as resp:
             if resp.status != 200:
@@ -131,7 +131,7 @@ def guardar_csv(registros: list, ruta: str) -> int:
 
 def main():
     logger.info("=" * 60)
-    logger.info("INICIO - Ingesta de Datos Climaticos - DataMarket")
+    logger.info("INICIO - Ingesta de Datos Climaticos - tiempo_clima")
     logger.info(f"Timestamp : {TIMESTAMP}")
     logger.info(f"Fuente    : Open-Meteo API (api.open-meteo.com)")
     logger.info(f"Sucursales: {len(SUCURSALES)} ciudades")
