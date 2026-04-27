@@ -28,6 +28,8 @@ logging.basicConfig(
 )
 logger = logging.getLogger("ingesta")
 
+
+# Ciudades chilenas
 SUCURSALES = [
     {"ciudad": "Santiago",     "pais": "Chile", "lat": -33.45, "lon": -70.65},
     {"ciudad": "Valparaiso",   "pais": "Chile", "lat": -33.05, "lon": -71.62},
@@ -41,6 +43,7 @@ SUCURSALES = [
     {"ciudad": "Rancagua",     "pais": "Chile", "lat": -34.17, "lon": -70.74},
 ]
 
+# URL api Open-Meteo
 API_BASE = (
     "https://api.open-meteo.com/v1/forecast"
     "?latitude={lat}&longitude={lon}"
@@ -48,7 +51,7 @@ API_BASE = (
     "&timezone=America/Santiago"
     "&forecast_days=1"
 )
-
+#funcionalidades
 
 def describir_viento(velocidad_kmh: float) -> str:
     if velocidad_kmh < 1:
@@ -64,13 +67,14 @@ def describir_viento(velocidad_kmh: float) -> str:
 
 
 def obtener_clima_ciudad(sucursal: dict):
+
     url = API_BASE.format(lat=sucursal["lat"], lon=sucursal["lon"])
     logger.info(f"  Consultando clima de {sucursal['ciudad']}...")
 
     try:
         req = urllib.request.Request(
             url,
-            headers={"User-Agent": "tiempo_clima-Pipeline/1.0"}
+            headers={"User-Agent": "DataMarket-Pipeline/1.0"}
         )
         with urllib.request.urlopen(req, timeout=10) as resp:
             if resp.status != 200:
@@ -102,6 +106,11 @@ def obtener_clima_ciudad(sucursal: dict):
 
 
 def obtener_datos_api(sucursales: list) -> list:
+    """
+    Recorre todas las sucursales y consulta el clima de cada una.
+    Las ciudades que fallen se omiten y se registran en el log.
+    Retorna unicamente los registros exitosos.
+    """
     logger.info(f"Iniciando consultas para {len(sucursales)} sucursales...")
     registros = []
     exitosos  = 0
@@ -120,6 +129,10 @@ def obtener_datos_api(sucursales: list) -> list:
 
 
 def guardar_csv(registros: list, ruta: str) -> int:
+    """
+    Escribe la lista de registros climaticos en un archivo CSV.
+    Retorna la cantidad de filas escritas (sin contar el encabezado).
+    """
     os.makedirs(os.path.dirname(ruta) or ".", exist_ok=True)
     with open(ruta, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=COLUMNAS, extrasaction="ignore")
@@ -131,7 +144,7 @@ def guardar_csv(registros: list, ruta: str) -> int:
 
 def main():
     logger.info("=" * 60)
-    logger.info("INICIO - Ingesta de Datos Climaticos - tiempo_clima")
+    logger.info("INICIO - Ingesta de Datos Climaticos - DataMarket")
     logger.info(f"Timestamp : {TIMESTAMP}")
     logger.info(f"Fuente    : Open-Meteo API (api.open-meteo.com)")
     logger.info(f"Sucursales: {len(SUCURSALES)} ciudades")
@@ -139,14 +152,17 @@ def main():
     logger.info("=" * 60)
 
     try:
+        # Paso 1: Consultar el clima de cada sucursal via API
         registros = obtener_datos_api(SUCURSALES)
 
         if not registros:
             logger.error("No se obtuvo ningun registro. Revisa tu conexion a internet.")
             raise SystemExit(1)
 
+        # Paso 2: Guardar datos crudos en data/raw/
         total = guardar_csv(registros, DESTINO_CSV)
 
+        # Paso 3: Resumen de trazabilidad
         logger.info("=" * 60)
         logger.info("FIN - Ingesta completada exitosamente")
         logger.info(f"  Registros almacenados : {total}")
