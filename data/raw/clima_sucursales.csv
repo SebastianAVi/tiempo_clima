@@ -1,0 +1,11 @@
+ciudad,pais,latitud,longitud,temperatura_c,humedad_pct,viento_kmh,descripcion_viento,fecha_consulta,hora_consulta
+Santiago,Chile,-33.45,-70.65,23.0,20,6.4,Brisa ligera,2026-04-27,14:07:21
+Valparaiso,Chile,-33.05,-71.62,18.0,48,22.8,Viento moderado,2026-04-27,14:07:22
+Concepcion,Chile,-36.82,-73.05,13.6,69,9.2,Brisa ligera,2026-04-27,14:07:23
+Antofagasta,Chile,-23.65,-70.4,20.2,57,11.9,Brisa ligera,2026-04-27,14:07:24
+La Serena,Chile,-29.91,-71.25,17.4,57,10.2,Brisa ligera,2026-04-27,14:07:25
+Temuco,Chile,-38.73,-72.59,8.6,92,9.1,Brisa ligera,2026-04-27,14:07:26
+Iquique,Chile,-20.21,-70.15,21.7,62,9.9,Brisa ligera,2026-04-27,14:07:27
+Puerto Montt,Chile,-41.47,-72.94,10.8,81,21.3,Viento moderado,2026-04-27,14:07:28
+Arica,Chile,-18.48,-70.33,22.9,60,13.9,Brisa ligera,2026-04-27,14:07:29
+Rancagua,Chile,-34.17,-70.74,18.4,32,6.3,Brisa ligera,2026-04-27,14:07:30
