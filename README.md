@@ -1,70 +1,88 @@
-tiempo_clima monitorea el clima de sus 10 sucursales en Chile para correlacionar
-las condiciones climaticas con el comportamiento de ventas diarias.
-Este script automatiza la captura de esos datos desde una API publica en tiempo real.
+# ⛅ tiempo_clima
+
+**Proyecto de práctica** para la asignatura **Gestión de Datos para la IA**.
+
+Este script automatiza la **ingesta de datos climáticos en tiempo real** de 10 sucursales en Chile. El objetivo es recopilar información meteorológica para posteriormente **correlacionar las condiciones climáticas con el comportamiento de ventas diarias**.
+
 ---
-Fuente de datos: Open-Meteo API
-Parametro	Detalle
-URL	`https://api.open-meteo.com/v1/forecast`
-Costo	Gratuita
-Registro	No requerido
-API Key	No requerida
-Datos	Temperatura, humedad, velocidad del viento en tiempo real
-La API recibe como parametros la latitud y longitud de cada ciudad
-y responde con las condiciones climaticas actuales en formato JSON.
+
+## ✨ Características
+
+- Consulta automática a la API pública **Open-Meteo** (gratuita y sin clave API).
+- Monitoreo de 10 ciudades/sucursales clave de Chile.
+- Generación de archivo CSV con datos crudos.
+- Sistema de logging detallado con timestamp único.
+- Sin dependencias externas (solo Python estándar).
+
 ---
-Como ejecutarlo
+
+## 🛠️ Tecnologías
+
+- **Python 3.10+**
+- **Open-Meteo API** (`https://api.open-meteo.com/v1/forecast`)
+- Datos: temperatura, humedad, velocidad del viento, descripción (escala Beaufort), coordenadas y timestamp.
+
+---
+
+## 🚀 Cómo ejecutar
+
 ```bash
-# No requiere librerias externas, solo Python 3.10+
+# Clonar el repositorio
+git clone https://github.com/SebastianAVi/tiempo_clima.git
+cd tiempo_clima
+
+# Ejecutar el script de ingesta
 python ingesta.py
-```
-Requiere conexion a internet para consultar la API de Open-Meteo.
----
-Archivos generados
-```
-data/
-└── raw/
-    └── clima_sucursales.csv      <- datos crudos en tiempo real
-logs/
-└── ingesta_YYYYMMDD_HHMMSS.log  <- registro de la ejecucion
-```
----
-Columnas del CSV de salida
-Columna	Descripcion
-ciudad	Nombre de la sucursal
-pais	Pais de la sucursal
-latitud	Coordenada geografica
-longitud	Coordenada geografica
-temperatura_c	Temperatura en grados Celsius
-humedad_pct	Humedad relativa en porcentaje
-viento_kmh	Velocidad del viento en km/h
-descripcion_viento	Descripcion segun escala Beaufort
-fecha_consulta	Fecha en que se ejecuto la ingesta
-hora_consulta	Hora exacta de la consulta
----
-Estructura del proyecto
-```
-tiempo_clima/
-├── ingesta.py          <- script principal (Etapa 1)
-├── README.md           <- este archivo
-├── .gitignore          <- excluye logs y datos generados
+Requisitos:
+
+Conexión a internet
+Python 3.10 o superior (no requiere instalación de paquetes)
+
+
+📁 Estructura del proyecto
+Bashtiempo_clima/
+├── ingesta.py                  # Script principal (Etapa 1)
+├── limpieza.py                 # (Próxima etapa)
+├── README.md
+├── .gitignore
 ├── data/
-│   ├── raw/            <- datos crudos ingresados desde la API
-│   └── processed/      <- datos limpios (Etapa 2)
-└── logs/               <- registros de cada ejecucion
-```
----
-Trazabilidad
-Cada ejecucion genera un log con timestamp unico que registra lo siguiente:
+│   ├── raw/                    # Datos crudos de la API
+│   └── processed/              # Datos limpios y transformados (Etapa 2)
+└── logs/
+    └── ingesta_YYYYMMDD_HHMMSS.log   # Registro de cada ejecución
+
+📊 Archivos generados
+
+data/raw/clima_sucursales.csv → Datos crudos en tiempo real
+logs/ingesta_YYYYMMDD_HHMMSS.log → Log detallado de la ejecución
+
+Columnas del CSV
+
+
+🌆 Sucursales monitoreadas
+
+Santiago
+Valparaíso
+Concepción
+Antofagasta
+La Serena
+Temuco
+Iquique
+Puerto Montt
+Arica
+Rancagua
+
+
+📋 Próximas etapas
+
+Etapa 2: limpieza.py → Lectura, limpieza, normalización y guardado en data/processed/clima_limpio.csv
+Etapa 3: Análisis exploratorio y correlación con datos de ventas (pendiente)
+
+
+📌 Trazabilidad
+Cada ejecución genera un log que registra:
+
 Inicio y fin del proceso
-Ciudad consultada en cada llamada a la API
-Cantidad de consultas exitosas y fallidas
+Ciudades consultadas
+Cantidad de consultas exitosas/fallidas
 Ruta del archivo CSV generado
----
-Sucursales monitoreadas
-Santiago, Valparaiso, Concepcion, Antofagasta, La Serena,
-Temuco, Iquique, Puerto Montt, Arica, Rancagua.
----
-Proxima etapa
-Etapa 2 con limpieza.py: leera data/raw/clima_sucursales.csv,
-aplicara transformaciones y normalizaciones, y generara
-data/processed/clima_limpio.csv.
